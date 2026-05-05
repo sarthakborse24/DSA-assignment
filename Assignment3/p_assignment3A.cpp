@@ -34,7 +34,7 @@ public:
         {
             temp = temp->next;
         }
-        temp->next= newsong; 
+        temp->next= newsong;
     }
     void deletesong(int val){
         if(head == nullptr){
@@ -62,5 +62,20 @@ public:
         temp->next = temp->next->next;
         delete todelete;
         return;
+    }
+
+    void display(){
+        Song *temp = head;
+        if (head == nullptr)
+        {
+            cout<<"empty play list";
+            return;
+        }
+        
+        while (temp->next != nullptr)
+        {
+            cout << temp->id << "|" << temp->name << "|" << temp->artist_name << "|" << temp->duration << endl;
+            temp = temp->next;
+        }
     }
 };
