@@ -36,6 +36,11 @@ public:
     }
 
     bool isempty(){
-        
+        return top == NULL;
+    }
+
+    char Top(){
+        return top->data;
     }
 };
+
