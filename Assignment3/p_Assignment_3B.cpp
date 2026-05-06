@@ -15,16 +15,14 @@ public:
 
 class Stack{
 public:
-    Node *top = NULL;
+    Node *top ;
+    Stack(){
+        top = NULL;
+    }
     void push(int val){
         Node *newnode = new Node(val);
-
-        if (top->next == NULL)
-        {
-            top = newnode;
-            return;
-        }
-        
-        
+        newnode->next = top;
+        top = newnode;
     }
+    
 };
