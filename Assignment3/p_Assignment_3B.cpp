@@ -44,3 +44,22 @@ public:
     }
 };
 
+int priority(char token){
+    if(token == '('){
+        return 0;
+    }
+    else if (token == '+' || token == '-' ){
+        return 1;   
+    }
+    else if (token == '*' || token == '/')
+    {
+        return 2;
+    }
+    else if (token == '^')
+    {
+        return 3;
+    }
+    
+    return -1;
+}
+
