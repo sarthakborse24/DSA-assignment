@@ -24,5 +24,18 @@ public:
         newnode->next = top;
         top = newnode;
     }
-    
+    int pop(){
+        if(top == NULL){
+            return -1;
+        }
+        Node *todelete = top;
+        int val = top->data;
+        top = top->next;
+        delete todelete;
+        return val;
+    }
+
+    bool isempty(){
+        
+    }
 };
