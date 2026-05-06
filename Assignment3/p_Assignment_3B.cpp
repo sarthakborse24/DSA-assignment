@@ -5,10 +5,10 @@ using namespace std;
 class Node
 {
 public:
-    int data;
+    char data;
     Node *next;
 
-    Node(int val)
+    Node(char val)
     {
         data = val;
         next = NULL;
@@ -93,7 +93,7 @@ void infixtopostfix(char infix[20])
         {
             s.push(token);
         }
-        else if (token = ')')
+        else if (token == ')')
         {
             while ((op = s.pop()) != '(')
             {
@@ -118,10 +118,11 @@ void infixtopostfix(char infix[20])
 }
 
 int main(){
-    char post[20];
+    char infix[20];
 
     cout<<"enter your infix expration: ";
-    cin>>post;
+    cin>>infix;
 
-    infixtopostfix(post);
+    infixtopostfix(infix);
+    return 0;
 }
