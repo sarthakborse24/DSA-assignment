@@ -38,7 +38,19 @@ public:
 
     void dequeue()
     {
-        
+        if(size == 0){
+            cout<<"queue is empty";
+            return;
+        }
+
+        cout<<"printing job: "<<array[fornt] << "printed successful"<<endl;
+
+        fornt = (fornt+1)%n;
+        size--;
+
+        if(size==0){
+            fornt = rear = -1;
+        }
     }
 
     void display(){
