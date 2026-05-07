@@ -6,12 +6,12 @@ using namespace std;
 class queue
 {
 public:
-    int fornt, rear, size;
+    int front, rear, size;
     string array[n];
 
     queue()
     {
-        fornt = -1;
+        front = -1;
         rear = -1;
         size = 0;
     }
@@ -24,9 +24,9 @@ public:
             cout << "queue is full!!";
             return;
         }
-        if (fornt == -1)
+        if (front == -1)
         {
-            fornt = 0;
+            front = 0;
         }
 
         rear = (rear + 1) % n;
@@ -38,22 +38,42 @@ public:
 
     void dequeue()
     {
-        if(size == 0){
-            cout<<"queue is empty";
+        if (size == 0)
+        {
+            cout << "queue is empty";
             return;
         }
 
-        cout<<"printing job: "<<array[fornt] << "printed successful"<<endl;
+        cout << "printing job: " << array[front] << "printed successful" << endl;
 
-        fornt = (fornt+1)%n;
+        front = (front + 1) % n;
         size--;
 
-        if(size==0){
-            fornt = rear = -1;
+        if (size == 0)
+        {
+            front = rear = -1;
         }
     }
 
-    void display(){
+    void display()
+    {
+        if (size == 0)
+        {
+            cout << "no jobs";
+            return;
+        }
+        int i = front;
+        int count = 1;
 
+        while (true)
+        {
+            cout << count++ << ". " << array[i] << endl;
+            if (i == rear)
+            {
+                break;
+            }
+
+            i = (i + 1) % n;
+        }
     }
 };
