@@ -36,6 +36,7 @@ public:
         size++;
 
         cout << "Print Job Added Successfully\n";
+
     }
 
     // Process Print Job
@@ -129,4 +130,4 @@ int main()
     } while (choice != 4);
 
     return 0;
-}
+}   
