@@ -1,201 +1,207 @@
-#include <iostream>
-#include <stack>
+#include<iostream>
+#include<cstring>
+#include<cctype>
+
 using namespace std;
 
-struct node
+class Node
 {
+public:
     char data;
-    node *left;
-    node *right;
+    Node *left, *right;
+
+    Node(char val)
+    {
+        data = val;
+        left = right = NULL;
+    }
 };
 
-node *createNode(char x)
+class ExpressionTree
 {
-    node *temp = new node;
-    temp->data = x;
-    temp->left = temp->right = NULL;
-    return temp;
-}
+    Node* root;
 
-int isOperator(char c)
-{
-    return (c == '+' || c == '-' || c == '*' ||
-            c == '/' || c == '^');
-}
+public:
 
-node *buildTree(string postfix)
-{
-    stack<node *> st;
-
-    for (int i = 0; i < postfix.length(); i++)
+    ExpressionTree()
     {
-        char c = postfix[i];
-
-        if (!isOperator(c))
-        {
-            st.push(createNode(c));
-        }
-        else
-        {
-            node *right = st.top();
-            st.pop();
-
-            node *left = st.top();
-            st.pop();
-
-            node *temp = createNode(c);
-
-            temp->left = left;
-            temp->right = right;
-
-            st.push(temp);
-        }
+        root = NULL;
     }
 
-    return st.top();
-}
-
-// Recursive Inorder
-void inorder(node *root)
-{
-    if (root == NULL)
-        return;
-
-    inorder(root->left);
-    cout << root->data;
-    inorder(root->right);
-}
-
-// Recursive Preorder
-void preorder(node *root)
-{
-    if (root == NULL)
-        return;
-
-    cout << root->data;
-    preorder(root->left);
-    preorder(root->right);
-}
-
-// Recursive Postorder
-void postorder(node *root)
-{
-    if (root == NULL)
-        return;
-
-    postorder(root->left);
-    postorder(root->right);
-    cout << root->data;
-}
-
-// Iterative Inorder
-void inorder_iter(node *root)
-{
-    stack<node *> st;
-    node *curr = root;
-
-    while (curr != NULL || !st.empty())
+    // Create tree from postfix
+    Node* createPostfix(char postfix[])
     {
-        while (curr != NULL)
+        Node* stack[100];
+        int top = -1;
+
+        for(int i = 0; postfix[i] != '\0'; i++)
         {
-            st.push(curr);
-            curr = curr->left;
+            char token = postfix[i];
+
+            Node* newnode = new Node(token);
+
+            // Operand
+            if(isalnum(token))
+            {
+                stack[++top] = newnode;
+            }
+            else
+            {
+                // Operator
+                newnode->right = stack[top--];
+                newnode->left  = stack[top--];
+
+                stack[++top] = newnode;
+            }
         }
 
-        curr = st.top();
-        st.pop();
-
-        cout << curr->data;
-        curr = curr->right;
+        root = stack[top];
+        return root;
     }
-}
 
-// Iterative Preorder
-void preorder_iter(node *root)
-{
-    if (root == NULL)
-        return;
-
-    stack<node *> st;
-    st.push(root);
-
-    while (!st.empty())
+    // Recursive Preorder
+    void preorder(Node* temp)
     {
-        node *temp = st.top();
-        st.pop();
-
-        cout << temp->data;
-
-        if (temp->right)
-            st.push(temp->right);
-
-        if (temp->left)
-            st.push(temp->left);
+        if(temp != NULL)
+        {
+            cout << temp->data << " ";
+            preorder(temp->left);
+            preorder(temp->right);
+        }
     }
-}
 
-// Iterative Postorder
-void postorder_iter(node *root)
-{
-    if (root == NULL)
-        return;
-
-    stack<node *> st1, st2;
-
-    st1.push(root);
-
-    while (!st1.empty())
+    // Recursive Inorder
+    void inorder(Node* temp)
     {
-        node *temp = st1.top();
-        st1.pop();
-
-        st2.push(temp);
-
-        if (temp->left)
-            st1.push(temp->left);
-
-        if (temp->right)
-            st1.push(temp->right);
+        if(temp != NULL)
+        {
+            inorder(temp->left);
+            cout << temp->data << " ";
+            inorder(temp->right);
+        }
     }
 
-    while (!st2.empty())
+    // Recursive Postorder
+    void postorder(Node* temp)
     {
-        cout << st2.top()->data;
-        st2.pop();
+        if(temp != NULL)
+        {
+            postorder(temp->left);
+            postorder(temp->right);
+            cout << temp->data << " ";
+        }
     }
-}
+
+    // Non Recursive Preorder
+    void nonRecursivePreorder(Node* temp)
+    {
+        Node* stack[100];
+        int top = -1;
+
+        while(temp != NULL || top >= 0)
+        {
+            while(temp != NULL)
+            {
+                cout << temp->data << " ";
+                stack[++top] = temp;
+                temp = temp->left;
+            }
+
+            temp = stack[top--];
+            temp = temp->right;
+        }
+    }
+
+    // Non Recursive Inorder
+    void nonRecursiveInorder(Node* temp)
+    {
+        Node* stack[100];
+        int top = -1;
+
+        while(temp != NULL || top >= 0)
+        {
+            while(temp != NULL)
+            {
+                stack[++top] = temp;
+                temp = temp->left;
+            }
+
+            temp = stack[top--];
+
+            cout << temp->data << " ";
+
+            temp = temp->right;
+        }
+    }
+
+    // Non Recursive Postorder
+    void nonRecursivePostorder(Node* temp)
+    {
+        char post[100];
+        int i = 0;
+
+        Node* stack[100];
+        int top = -1;
+
+        while(temp != NULL || top >= 0)
+        {
+            while(temp != NULL)
+            {
+                stack[++top] = temp;
+
+                post[i++] = temp->data;
+
+                temp = temp->right;
+            }
+
+            temp = stack[top--];
+            temp = temp->left;
+        }
+
+        for(i = strlen(post)-1; i >= 0; i--)
+        {
+            cout << post[i] << " ";
+        }
+    }
+
+    Node* getRoot()
+    {
+        return root;
+    }
+};
 
 int main()
 {
-    string postfix;
-    node *root;
+    ExpressionTree obj;
+
+    char postfix[100];
 
     cout << "Enter Postfix Expression: ";
     cin >> postfix;
 
-    root = buildTree(postfix);
+    Node* root = obj.createPostfix(postfix);
 
     cout << "\nRecursive Traversals\n";
 
-    cout << "Inorder: ";
-    inorder(root);
+    cout << "\nPreorder : ";
+    obj.preorder(root);
 
-    cout << "\nPreorder: ";
-    preorder(root);
+    cout << "\nInorder : ";
+    obj.inorder(root);
 
-    cout << "\nPostorder: ";
-    postorder(root);
+    cout << "\nPostorder : ";
+    obj.postorder(root);
 
-    cout << "\n\nNon-Recursive Traversals\n";
+    cout << "\n\nNon Recursive Traversals\n";
 
-    cout << "Inorder: ";
-    inorder_iter(root);
+    cout << "\nPreorder : ";
+    obj.nonRecursivePreorder(root);
 
-    cout << "\nPreorder: ";
-    preorder_iter(root);
+    cout << "\nInorder : ";
+    obj.nonRecursiveInorder(root);
 
-    cout << "\nPostorder: ";
-    postorder_iter(root);
+    cout << "\nPostorder : ";
+    obj.nonRecursivePostorder(root);
 
     return 0;
 }
