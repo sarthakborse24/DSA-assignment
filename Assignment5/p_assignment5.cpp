@@ -15,28 +15,34 @@ public:
     }
 };
 
-class expressiontree{
-public:    
+class expressiontree
+{
+public:
     Node *root;
 
-    expressiontree(){
+    expressiontree()
+    {
         root = NULL;
     }
 
-    Node* createpostfix(char postfix[]){
+    Node *createpostfix(char postfix[])
+    {
 
         Node *stack[100];
         int Top = -1;
 
-        for(int i=0 ; postfix != '\0'; i++){
+        for (int i = 0; postfix != '\0'; i++)
+        {
 
             char token = postfix[i];
-            Node * newnode = new Node(token);
+            Node *newnode = new Node(token);
 
-            if(isalnum(token)){
+            if (isalnum(token))
+            {
                 stack[++Top] = newnode;
             }
-            else{
+            else
+            {
                 newnode->right = stack[Top--];
                 newnode->left = stack[Top--];
 
@@ -47,5 +53,28 @@ public:
         return root;
     }
 
+    void preorder(Node *temp){
+        cout<<temp->data<<" ";
+        preorder(temp->left);
+        preorder(temp->right);
+    }
+    void inorder(Node *temp){
+        preorder(temp->left);
+        cout<<temp->data<<" ";
+        preorder(temp->right);
+    }
+    void postorder(Node *temp){
+        preorder(temp->left);
+        preorder(temp->right);
+        cout<<temp->data<<" ";
+    }
     
 };
+
+int main()
+{
+    expressiontree obj ;
+    char postfix[100];
+
+
+}
