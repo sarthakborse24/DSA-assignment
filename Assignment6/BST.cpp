@@ -48,6 +48,16 @@ public:
             searchkey(root->right , key);
         }
     }
+
+    Node* minivalue(Node *root){
+        Node *current = root;
+
+        while (current && current->left != NULL)
+        {
+            current = current->left;
+        }
+        return current;
+    }
 };
 
 int main(){
