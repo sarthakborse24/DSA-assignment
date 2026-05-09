@@ -53,6 +53,8 @@ public:
         return root;
     }
 
+    // Recursive
+
     void preorder(Node *temp){
         cout<<temp->data<<" ";
         preorder(temp->left);
@@ -69,6 +71,46 @@ public:
         cout<<temp->data<<" ";
     }
     
+    // non Recursive
+
+    void nonRecursivepreorder(Node *temp){
+        Node *stack[100];
+        int Top = -1;
+        while (temp != NULL || Top >= 0)
+        {
+            while (temp != NULL)
+            {
+                cout<<temp->data<<" ";
+                stack[++Top] = temp;
+                temp = temp->left;
+            }
+
+            temp = stack[Top--];
+            temp = temp->right;
+            
+        }
+        
+    }
+
+    void nonrecursiveinorder(Node *temp){
+        Node *stack[100];
+        int Top =-1;
+
+        while (temp != NULL || Top >= 0)
+        {
+            while (temp != NULL)
+            {
+                stack[++Top] = temp;
+                temp = temp->left;
+            }
+            temp = stack[Top--];
+            cout<< temp->data<<" ";
+            temp = temp ->right;
+            
+        }
+        
+    }
+
 };
 
 int main()
