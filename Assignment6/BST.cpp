@@ -58,6 +58,43 @@ public:
         }
         return current;
     }
+
+    Node *deletenode(Node *root , int key){
+        if(root == NULL){
+            return root;
+        }
+        if(key < root->data){
+            root->left = deletenode(root->left , key);
+        }
+        else if (key < root->data)
+        {
+            root->right = deletenode(root->right , key);
+        }
+        // found the element
+        else{
+            // one child
+            if(root->left == NULL){
+                Node *temp = root->right;
+                delete root;
+                return temp;
+            }
+            else if (root->right == NULL)
+            {
+                Node *temp = root->left;
+                delete root;
+                return temp;
+            }
+
+            // two child
+
+            Node *temp = minivalue(root->right);
+            root->data = temp->data;
+
+            root->right = deletenode(root->right , temp->data);
+            
+        }
+        
+    }
 };
 
 int main(){
