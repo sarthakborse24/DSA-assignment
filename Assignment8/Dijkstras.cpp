@@ -1,74 +1,101 @@
-#include <iostream>
-#include <climits>
+#include<iostream>
+#include<climits>
 using namespace std;
-int V;
-#define INF INT_MAX
 
-int minDistance(int dist[], bool visited[])
-{
-    int min = INF, min_index = -1;
-    for (int i = 0; i < V; i++)
+#define MAX 20
+#define inf INT_MAX
+
+class Graph
+{public:
+
+    int graph[MAX][MAX];
+    int n;
+
+    void input()
     {
-        if (!visited[i] && dist[i] <= min)   
+        cout<<"Enter the number of vertices : ";
+        cin>>n;
+        cout<<"Enter the adjacency Matrix : ";
+        for(int i=0; i<n; i++)
         {
-            min = dist[i];
-            min_index = i;
-        }
-    }
-    return min_index;
-}
-
-void dijkstra(int graph[100][100], int source)
-{
-    int dist[100];
-    bool visited[100];
-    for (int i = 0; i < V; i++)
-    {
-        dist[i] = INF;
-        visited[i] = false;
-    }
-    dist[source] = 0;
-
-    for (int count = 0; count < V - 1; count++)
-    {
-        int u = minDistance(dist, visited);
-        if (u == -1)
-            break;
-        visited[u] = true;
-        for (int v = 0; v < V; v++)
-        {
-            if (!visited[v] && graph[u][v] != 0 &&
-                dist[u] != INF &&
-                dist[u] + graph[u][v] < dist[v])
+            for(int j=0; j<n; j++)
             {
-                dist[v] = dist[u] + graph[u][v];
+                cin>>graph[i][j];
             }
         }
     }
-    cout << "\nShortest distances from source " << source << ":\n";
-    for (int i = 0; i < V; i++)
+    
+    int minimum_dist(int dist[], bool visited[])
     {
-        cout << "To node " << i << " = " << dist[i] << endl;
+        int min = inf;
+        int min_index = -1;
+
+        for(int i=0; i<n; i++)
+        {
+            if(!visited[i] && dist[i]<min)
+            {
+                min = dist[i];
+                min_index = i;
+            }
+        }
+        return min_index;
     }
-}
+
+
+    // Dijkstra ALgorithm
+    void dijkstra(int source)
+    {
+        int dist[MAX];
+        bool visited[MAX];
+
+        for(int i=0; i<n; i++)
+        {
+            dist[i] = inf;
+            visited[i] = false;
+        }
+
+        dist[source] = 0;
+
+        for(int i=0; i<n-1; i++)
+        {
+            int u = minimum_dist(dist, visited);
+
+            if(u == -1)
+                break;
+
+            visited[u] = true;
+
+            for(int v=0; v<n; v++)
+            {
+                if(!visited[v] && graph[u][v] && dist[u]!=inf && 
+                        dist[u] + graph[u][v] < dist[v])
+                {
+                    dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
+
+        cout<<"\nShortest Distance from source node :\n";
+
+        for(int i=0; i<n; i++)
+        {
+            cout<<"To Node : "<<i<<" = "<<dist[i]<<endl;
+        }
+    }
+};
 
 int main()
 {
-    int graph[100][100];
-    int source;
-    cout << "Enter number of vertices: ";
-    cin >> V;
-    cout << "Enter adjacency matrix:\n";
-    for (int i = 0; i < V; i++)
-    {
-        for (int j = 0; j < V; j++)
-        {
+    Graph g;
 
-            cin >> graph[i][j];
-        }
-    }
-    cout << "Enter source vertex: ";
+    g.input();
+    
+    int source;
+    
+    cout << "Enter source vertex : ";
     cin >> source;
-    dijkstra(graph, source);
+
+    g.dijkstra(source);
+
     return 0;
 }
