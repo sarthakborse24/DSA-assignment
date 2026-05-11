@@ -155,125 +155,151 @@ public:
         }
     }
 
-    void chainingWithoutReplacement(string uid,int pwd)
+    void chainingWithoutReplacement(string uid, int pwd)
+{
+    if(isFull())
     {
-        if(isDuplicate(uid))
+        cout << "Hash Table Full\n";
+        return;
+    }
+
+    if(isDuplicate(uid))
+    {
+        cout << "Duplicate User ID\n";
+        return;
+    }
+
+    int index = hashFunction(pwd);
+
+    // If slot is empty
+    if(user[index] == "")
+    {
+        user[index] = uid;
+        pass[index] = pwd;
+    }
+    else
+    {
+        cout << "Collision occurred at index " << index << endl;
+
+        // Linear probing to find empty slot
+        int i = (index + 1) % SIZE;
+
+        while(user[i] != "")
         {
-            cout<<"Duplicate User ID\n";
-            return;
+            i = (i + 1) % SIZE;
         }
 
-        if(isFull())
+        user[i] = uid;
+        pass[i] = pwd;
+
+        // Update chain only if original element belongs to same hash index
+        if(hashFunction(pass[index]) == index)
         {
-            cout<<"Hash Table Full\n";
-            return;
+            int temp = index;
+
+            while(link[temp] != -1)
+            {
+                temp = link[temp];
+            }
+
+            link[temp] = i;
         }
+    }
+}
 
-        int index = hashFunction(pwd);
+   void chainingWithReplacement(string uid, int pwd)
+{
+    if(isFull())
+    {
+        cout << "Hash Table Full\n";
+        return;
+    }
 
-        if(user[index] == "")
+    if(isDuplicate(uid))
+    {
+        cout << "Duplicate User ID\n";
+        return;
+    }
+
+    int index = hashFunction(pwd);
+
+    // If home position is empty
+    if(user[index] == "")
+    {
+        user[index] = uid;
+        pass[index] = pwd;
+    }
+    else
+    {
+        cout << "Collision occurred at index " << index << endl;
+
+        int existingHash = hashFunction(pass[index]);
+
+        // Replacement condition
+        if(existingHash != index)
         {
+            // Store old record
+            string tempUser = user[index];
+            int tempPass = pass[index];
+            int tempLink = link[index];
+
+            // Replace with new record
             user[index] = uid;
             pass[index] = pwd;
+            link[index] = -1;
+
+            // Find new place for old record using linear probing
+            int i = (index + 1) % SIZE;
+
+            while(user[i] != "")
+            {
+                i = (i + 1) % SIZE;
+            }
+
+            user[i] = tempUser;
+            pass[i] = tempPass;
+            link[i] = tempLink;
+
+            // Fix chain of displaced record
+            int head = existingHash;
+
+            if(head != index)
+            {
+                int prev = head;
+
+                while(link[prev] != index)
+                {
+                    prev = link[prev];
+                }
+
+                link[prev] = i;
+            }
         }
         else
         {
-            cout<<"Collision occurred at index "<<index<<"\n";
-            int i;
-            for(i=0;i<SIZE;i++)
+            // Insert normally at next free slot
+            int i = (index + 1) % SIZE;
+
+            while(user[i] != "")
             {
-                if(user[i] == "")
-                    break;
+                i = (i + 1) % SIZE;
             }
 
             user[i] = uid;
             pass[i] = pwd;
 
+            // Update chain
             int temp = index;
+
             while(link[temp] != -1)
+            {
                 temp = link[temp];
+            }
 
             link[temp] = i;
         }
     }
-
-    void chainingWithReplacement(string uid,int pwd)
-    {
-        if(isDuplicate(uid))
-        {
-            cout<<"Duplicate User ID\n";
-            return;
-        }
-
-        if(isFull())
-        {
-            cout<<"Hash Table Full\n";
-            return;
-        }
-
-        int index = hashFunction(pwd);
-
-        if(user[index] == "")
-        {
-            user[index] = uid;
-            pass[index] = pwd;
-        }
-        else
-        {
-            cout<<"Collision occurred at index "<<index<<"\n";
-
-            int existingHash = hashFunction(pass[index]);
-
-            if(existingHash != index)
-            {
-                string tempUser = user[index];
-                int tempPass = pass[index];
-                int tempLink = link[index];
-
-                user[index] = uid;
-                pass[index] = pwd;
-                link[index] = -1;
-
-                int i;
-                for(i=0;i<SIZE;i++)
-                {
-                    if(user[i] == "")
-                        break;
-                }
-
-                user[i] = tempUser;
-                pass[i] = tempPass;
-                link[i] = tempLink;
-
-                int head = existingHash;
-                if(head != index)
-                {
-                    int prev = head;
-                    while(link[prev] != index)
-                        prev = link[prev];
-                    link[prev] = i;
-                }
-            }
-            else
-            {
-                int i;
-                for(i=0;i<SIZE;i++)
-                {
-                    if(user[i] == "")
-                        break;
-                }
-
-                user[i] = uid;
-                pass[i] = pwd;
-
-                int temp = index;
-                while(link[temp] != -1)
-                    temp = link[temp];
-
-                link[temp] = i;
-            }
-        }
-    }
+}
 };
 
 int main()
